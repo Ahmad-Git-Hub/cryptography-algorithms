@@ -6,49 +6,32 @@ public class CaesarCipher {
     public CaesarCipher(int shift) {
         this.shift = shift;
     }
-    public StringBuilder encrypt(String str) {
-        StringBuilder cipher = new StringBuilder();
-        int ascii;
-        for(int i = 0; i < str.length(); i++) {
-            ascii = str.charAt(i);
-            if(ascii == ' ') {
-                cipher.append(' ');
-                continue;
+    public String encrypt(String str) {
+        StringBuilder result = new StringBuilder();
+        char base;
+        for (char c : str.toCharArray()) {
+            if (Character.isAlphabetic(c)) {
+                base = Character.isUpperCase(c) ? 'A' : 'a';
+                result.append((char) (((c - base + shift) % 26) + base));
+            } else {
+                result.append(c);
             }
-            for(int j = 0; j < shift; j++) {
-                ascii++;
-                if(ascii > 90 && ascii < 97) {
-                    ascii = 65;
-                }
-                else if(ascii > 122) {
-                    ascii = 97;
-                }
-            }
-            cipher.append((char) ascii);
         }
-        return cipher;
+
+        return result.toString();
     }
-    public StringBuilder decrypt(String str) {
-        StringBuilder original_text = new StringBuilder();
-        int ascii;
-        for(int i = 0; i < str.length(); i++) {
-            ascii = str.charAt(i);
-            if(ascii == ' ') {
-                original_text.append(' ');
-                continue;
+    public String decrypt(String str) {
+        StringBuilder result = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            if (Character.isAlphabetic(c)) {
+                char base = Character.isUpperCase(c) ? 'A' : 'a';
+                int decryptedChar = ((c - base - shift + 26) % 26) + base;
+                result.append((char) decryptedChar);
+            } else {
+                result.append(c);
             }
-            for(int j = 0; j < shift; j++) {
-                ascii--;
-                if(ascii < 65) {
-                    ascii = 90;
-                }
-                else if(ascii > 90 && ascii < 97) {
-                    ascii = 122;
-                }
-            }
-            original_text.append((char) ascii);
         }
-        return original_text;
+        return result.toString();
     }
 }
 
