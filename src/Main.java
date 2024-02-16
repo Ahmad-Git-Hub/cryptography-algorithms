@@ -6,5 +6,8 @@ public class Main {
         CaesarCipher test = new CaesarCipher(3);
         System.out.println(test.encrypt("abc xyz ABC XYZ"));
         System.out.println(test.decrypt("def abc DEF ABC"));
+
+        Atbash test2 = new Atbash();
+        test2.encrypt("abc");
     }
 }
