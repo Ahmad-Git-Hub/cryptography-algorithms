@@ -63,12 +63,12 @@ public class Main {
 
     public static void handleAtbashCipher() {
         String userInput = promptUser("encrypt");
-        Atbash testAtbash = new Atbash();
-        String encryptionResult = testAtbash.encrypt(userInput);
+        AtbashCipher testAtbashCipher = new AtbashCipher();
+        String encryptionResult = testAtbashCipher.encrypt(userInput);
         System.out.println("Encrypted text with Atbash: " + encryptionResult);
 
         userInput = promptUser("decrypt");
-        String decryptionResult = testAtbash.decrypt(userInput);
+        String decryptionResult = testAtbashCipher.decrypt(userInput);
         System.out.println("Decrypted text with Atbash: " + decryptionResult);
     }
 
