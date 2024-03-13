@@ -1,6 +1,5 @@
 public class AtbashCipher {
 
-    public AtbashCipher() {}
 
     public String encrypt(String str) {
         StringBuilder result = new StringBuilder();

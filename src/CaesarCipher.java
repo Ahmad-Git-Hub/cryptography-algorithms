@@ -1,8 +1,6 @@
 public class CaesarCipher {
     final private int shift;
 
-
-
     public CaesarCipher(int shift) {
         this.shift = shift;
     }
