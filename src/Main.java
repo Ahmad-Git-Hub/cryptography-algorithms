@@ -29,14 +29,36 @@ public class Main {
                 case MenuOptions.POLYBIUS_CIPHER:
                     handelPolybiusCipher();
                     break;
+                case MenuOptions.PLAYFAIR_CIPHER:
+                    handelPlayfair();
                 case MenuOptions.EXIT:
                     System.out.println("Exiting...");
                     break;
+
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != MenuOptions.EXIT);
     }
+
+    private static void handelPlayfair() {
+        String userInput;
+        try {
+            Playfair testPlayfairCipher = new Playfair("IRAQ");
+            userInput = promptUser("encrypt");
+            String cipherText = testPlayfairCipher.encrypt(userInput);
+            System.out.println("Encrypted text with Playfair algorithm: " + cipherText);
+
+            userInput = promptUser("decrypt");
+
+            String originalText = testPlayfairCipher.decrypt(cipherText);
+            System.out.println("Decrypted text with Playfair algorithm: " + originalText);
+        } catch (InputMismatchException e) {
+                System.out.println("A string is required");
+            }
+    }
+
+
     public static int getUserChoice() {
         while (!scanner.hasNextInt()) {
             System.out.println("Invalid input. Please enter a number.");
@@ -58,7 +80,7 @@ public class Main {
             System.out.println("Encrypted text with polybius algorithm: " + cipherText);
 
             userInput = promptUser("decrypt");
-            
+
             String originalText = testPolybiusCipher.decrypt(userInput);
             System.out.println("Decrypted text with polybius algorithm: " + originalText);
         }
@@ -67,9 +89,6 @@ public class Main {
         }
 
     }
-
-
-
 
     private static void handelKeywordCipher() {
         KeywordCipher.run();
@@ -124,6 +143,7 @@ public class Main {
         System.out.println("║ \033[1;36m2. Atbash Cipher\033[0m           ║");
         System.out.println("║ \033[1;36m3. Keyword Cipher\033[0m          ║");
         System.out.println("║ \033[1;36m4. Polybuis Cipher \033[0m        ║");
+        System.out.println("║ \033[1;36m5. Playfair Cipher \033[0m        ║");
         System.out.println("║ \033[1;31m0. Exit\033[0m                    ║");
         System.out.println("╚════════════════════════════╝");
         System.out.print("\033[1mEnter your choice:\033[0m ");
@@ -134,8 +154,29 @@ public class Main {
         public static final int ATBASH_CIPHER = 2;
         public static final int KEYWORD_CIPHER = 3;
         public static final int POLYBIUS_CIPHER = 4;
+        public static final int PLAYFAIR_CIPHER = 5;
+
         public static final int EXIT = 0;
     }
 
 
 }
+//        String message = "This is a secret message";
+//        String key = "swordfish";
+//        System.out.println("String: "+ message);
+//        System.out.println("key: " + key);
+//
+//        String cipherText = BeaufortCipher.encrypt(message, key);
+//        System.out.println("Encrypted Text: " + cipherText);
+//
+//        String plainText = BeaufortCipher.decrypt(cipherText, key);
+//        System.out.println("Decrypted Text: " + plainText);
+
+
+
+//        String key = "LEMON";
+//        String message = "ATTACKATDAWN";
+//        String encryptedMsg = VigenereCipher.encrypt(message, key);
+//        System.out.println("String: " + message);
+//        System.out.println("Encrypted message: " + encryptedMsg);
+//        System.out.println("Decrypted message: " + VigenereCipher.decrypt(encryptedMsg, key));
