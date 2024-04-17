@@ -1,97 +1,80 @@
 public class Trifid {
-    char[][] layer1 = new char[3][3];
-    char[][] layer2 = new char[3][3];
-    char[][] layer3 = new char[3][3];
+
+    char[][][] layers = new char[3][3][3];
     String text = "";
-    int[] layer;
-    int[] cols;
-    int[] rows;
-    int layer1_char = 0;
-    int layer2_char = 9;
-    int layer3_char = 18;
-    String alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.";
-    
+    int[] layerNumbers;
+    int[] colNumbers;
+    int[] rowNumbers;
+
+    final String ALPHABETS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.";
+
     public Trifid() {
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                layer1[i][j] = alphabets.charAt(layer1_char++);
-                layer2[i][j] = alphabets.charAt(layer2_char++);
-                layer3[i][j] = alphabets.charAt(layer3_char++);
+        int charIndex = 0;
+        for (int l = 0; l < 3; l++) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    layers[l][i][j] = ALPHABETS.charAt(charIndex++);
+                }
+            }
+        }
+
+        for (char[][] chars : layers) {
+            for (char[] aChar : chars) {
+                for (char c : aChar) {
+                    System.out.print(c + " ");
+                }
+                System.out.println();
             }
             System.out.println();
         }
     }
+
+
+
+
+
+
 
     public String encrypt(String text) {
         int index = 0;
         text = process(text);
         this.text = text;
         StringBuilder cipher = new StringBuilder();
-        layer = new int[text.length()];
-        cols = new int[text.length()];
-        rows = new int[text.length()];
-        for(int i = 0; i < text.length(); i++) {
+        layerNumbers = new int[text.length()];
+        colNumbers = new int[text.length()];
+        rowNumbers = new int[text.length()];
+        for (int i = 0; i < text.length(); i++) {
+            boolean found = false;
             char currentChar = text.charAt(i);
             int ascii = currentChar - 'A';
-            if(ascii <= 8) {
-                for(int i1 = 0; i1 < 3; i1++) {
-                    for(int j1 = 0; j1<3; j1++) {
-                        if(layer1[i1][j1] == currentChar) {
-                            cols[index] = j1;
-                            rows[index] = i1;
-                            layer[index] = 0;
-                            break;
-
-                        }
-                    }
-                }
-            }
-            else if(ascii > 8 && ascii < 18){
-                for(int i2 = 0; i2 < 3; i2++) {
-                    for(int j2 = 0; j2<3; j2++) {
-                        if(layer2[i2][j2] == currentChar) {
-                            cols[index] = j2;
-                            rows[index] = i2;
-                            layer[index] = 1;
-                            break;
-
-                        }
-                    }
-                }
-            }
-            else if(ascii >= 18 && ascii <= 26) {
-                for(int i3 = 0; i3 < 3; i3++) {
-                    for(int j3 = 0; j3 <3; j3++) {
-                        if(layer3[i3][j3] == currentChar) {
-                            cols[index] = j3;
-                            rows[index] = i3;
-                            layer[index] = 2;
-                            break;
+            for (int l = 0; l < 3; l++) {
+                if (!found) {
+                    for (int r = 0; r < 3; r++) {
+                        if (!found) {
+                            for (int c = 0; c < 3; c++) {
+                                if (layers[l][r][c] == currentChar) {
+                                    layerNumbers[index] = l;
+                                    rowNumbers[index] = r;
+                                    colNumbers[index] = c;
+                                    found = true;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
             }
             index++;
         }
-
         displayArrays();
+
         int[] numbers = mergeArraysNumbers();
         for(int i = 0; i < numbers.length-2; i+=3) {
-            if(numbers[i] == 0) {
-                cipher.append(layer1[ numbers[i+2]] [numbers[i+1]]);
-            }
-            else if(numbers[i] == 1) {
-                cipher.append(layer2[ numbers[i+2]] [numbers[i+1]]);
-            }
-            else{
-                cipher.append(layer3[ numbers[i+2]] [numbers[i+1]]);
-
-            }
+            cipher.append(layers[numbers[i]][numbers[i+2]] [numbers[i+1]]);
         }
         return cipher.toString();
 
     }
-
     public int[] mergeArraysNumbers() {
         int[] numbers = new int[text.length()*3];
         int index = 0;
@@ -103,13 +86,13 @@ public class Trifid {
                 index = 0;
             }
             if(flag == 0) {
-                numbers[i] = layer[index++];
+                numbers[i] = layerNumbers[index++];
             }
             else if(flag == 1) {
-                numbers[i] = cols[index++];
+                numbers[i] = colNumbers[index++];
             }
             else if(flag == 2) {
-                numbers[i] = rows[index++];
+                numbers[i] = rowNumbers[index++];
             }
 
         }
@@ -117,21 +100,21 @@ public class Trifid {
     }
 
     public void displayArrays(){
+        System.out.println("\ncharacters");
         for(int i = 0; i < text.length(); i++) {
             System.out.print(text.charAt(i)+"  |  ");
         }
         System.out.println("\nlayers");
         for(int i = 0; i < text.length(); i++) {
-
-            System.out.print(layer[i]+"  |  ");
+            System.out.print(layerNumbers[i]+"  |  ");
         }
         System.out.println("\ncols");
         for(int i = 0; i < text.length(); i++) {
-            System.out.print(cols[i]+"  |  ");
+            System.out.print(colNumbers[i]+"  |  ");
         }
         System.out.println("\nrows");
         for(int i = 0; i < text.length(); i++) {
-            System.out.print(rows[i]+"  |  ");
+            System.out.print(rowNumbers[i]+"  |  ");
         }
 
     }
