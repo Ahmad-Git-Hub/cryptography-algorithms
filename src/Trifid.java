@@ -30,11 +30,6 @@ public class Trifid {
     }
 
 
-
-
-
-
-
     public String encrypt(String text) {
         int index = 0;
         text = process(text);
@@ -46,7 +41,6 @@ public class Trifid {
         for (int i = 0; i < text.length(); i++) {
             boolean found = false;
             char currentChar = text.charAt(i);
-            int ascii = currentChar - 'A';
             for (int l = 0; l < 3; l++) {
                 if (!found) {
                     for (int r = 0; r < 3; r++) {
@@ -97,6 +91,37 @@ public class Trifid {
 
         }
         return numbers;
+    }
+
+    public String decrypt(String cipher){
+        int[] numbers = new int[cipher.length()*3];
+        int index = 0;
+        for(char currentChar : cipher.toCharArray()) {
+            for (int l = 0; l < 3; l++) {
+                for (int r = 0; r < 3; r++) {
+                    for (int c = 0; c < 3; c++) {
+                        if(layers[l][r][c] == currentChar) {
+                            numbers[index++] = l;
+                            numbers[index++] = c;
+                            numbers[index++] = r;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        int layerIndex = 0;
+        int colIndex = (numbers.length / 3);
+        int rowIndex = (numbers.length - colIndex);
+        StringBuilder decryptedText = new StringBuilder();
+        int i = 0;
+        while(i < numbers.length/3) {
+           decryptedText.append(layers[numbers[layerIndex++]][numbers[rowIndex++]][numbers[colIndex++]]);
+           i++;
+        }
+        return decryptedText.toString();
     }
 
     public void displayArrays(){
