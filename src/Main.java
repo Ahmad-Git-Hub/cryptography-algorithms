@@ -8,6 +8,14 @@ public class Main {
     public static void main(String[] args) {
         menu();
         scanner.close();
+
+        Trifid trifidTest = new Trifid();
+        String plainText = "secret message";
+        String encrypted = trifidTest.encrypt(plainText);
+        System.out.println("plain text: " +plainText);
+        System.out.println("encrypted message: "+encrypted);
+        String decrypted = trifidTest.decrypt(encrypted);
+        System.out.println("decrypted text: "+ decrypted);
     }
 
     public static void menu() {
@@ -31,6 +39,8 @@ public class Main {
                     break;
                 case MenuOptions.PLAYFAIR_CIPHER:
                     handelPlayfair();
+                case MenuOptions.TRIFID_CIPHER:
+                    HandelTrifid();
                 case MenuOptions.EXIT:
                     System.out.println("Exiting...");
                     break;
@@ -39,6 +49,24 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != MenuOptions.EXIT);
+    }
+
+    private static void HandelTrifid() {
+        String userInput;
+        try {
+            Trifid testTrifidCipher = new Trifid();
+            userInput = promptUser("encrypt");
+            String cipherText = testTrifidCipher.encrypt(userInput);
+            System.out.println("Encrypted text with trifid algorithm: " + cipherText);
+
+            userInput = promptUser("decrypt");
+
+            String originalText = testTrifidCipher.decrypt(userInput);
+            System.out.println("Decrypted text with Playfair algorithm: " + originalText);
+        } catch (InputMismatchException e) {
+            System.out.println("A string is required");
+        }
+
     }
 
     private static void handelPlayfair() {
@@ -51,7 +79,7 @@ public class Main {
 
             userInput = promptUser("decrypt");
 
-            String originalText = testPlayfairCipher.decrypt(cipherText);
+            String originalText = testPlayfairCipher.decrypt(userInput);
             System.out.println("Decrypted text with Playfair algorithm: " + originalText);
         } catch (InputMismatchException e) {
                 System.out.println("A string is required");
@@ -144,6 +172,7 @@ public class Main {
         System.out.println("║ \033[1;36m3. Keyword Cipher\033[0m          ║");
         System.out.println("║ \033[1;36m4. Polybuis Cipher \033[0m        ║");
         System.out.println("║ \033[1;36m5. Playfair Cipher \033[0m        ║");
+        System.out.println("║ \033[1;36m6. Trifid Cipher \033[0m          ║");
         System.out.println("║ \033[1;31m0. Exit\033[0m                    ║");
         System.out.println("╚════════════════════════════╝");
         System.out.print("\033[1mEnter your choice:\033[0m ");
@@ -155,6 +184,7 @@ public class Main {
         public static final int KEYWORD_CIPHER = 3;
         public static final int POLYBIUS_CIPHER = 4;
         public static final int PLAYFAIR_CIPHER = 5;
+        public static final int TRIFID_CIPHER = 6;
 
         public static final int EXIT = 0;
     }

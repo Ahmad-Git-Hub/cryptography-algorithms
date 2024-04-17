@@ -94,6 +94,7 @@ public class Trifid {
     }
 
     public String decrypt(String cipher){
+        cipher = cipher.toUpperCase();
         int[] numbers = new int[cipher.length()*3];
         int index = 0;
         for(char currentChar : cipher.toCharArray()) {
