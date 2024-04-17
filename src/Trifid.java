@@ -1,26 +1,28 @@
 public class Trifid {
+    private final char[][][] cube;
+    private String message;
+    private int[] layerIndices;
+    private int[] columnIndices;
+    private int[] rowIndices;
 
-    char[][][] layers = new char[3][3][3];
-    String text = "";
-    int[] layerNumbers;
-    int[] colNumbers;
-    int[] rowNumbers;
-
-    final String ALPHABETS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.";
 
     public Trifid() {
+        final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.";
         int charIndex = 0;
-        for (int l = 0; l < 3; l++) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    layers[l][i][j] = ALPHABETS.charAt(charIndex++);
+        cube = new char[3][3][3]; // Consistent variable naming
+        for (int layer = 0; layer < 3; layer++) {
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    cube[layer][row][col] = ALPHABET.charAt(charIndex++);
                 }
             }
         }
-
-        for (char[][] chars : layers) {
-            for (char[] aChar : chars) {
-                for (char c : aChar) {
+        printCube();
+    }
+    private void printCube() {
+        for (char[][] layer : cube) {
+            for (char[] row : layer) {
+                for (char c : row) {
                     System.out.print(c + " ");
                 }
                 System.out.println();
@@ -29,27 +31,39 @@ public class Trifid {
         }
     }
 
+    public String encrypt(String message) {
+        message = processMessage(message);
+        this.message = message;
+        StringBuilder cipherText = new StringBuilder();
+        layerIndices = new int[message.length()];
+        columnIndices = new int[message.length()];
+        rowIndices = new int[message.length()];
+        findCharIndicies();
+        
+        displayArrays();
 
-    public String encrypt(String text) {
+        int[] combinedIndices = mergeIndices();
+        for (int i = 0; i < combinedIndices.length - 2; i += 3) {
+            cipherText.append(cube[combinedIndices[i]][combinedIndices[i + 2]][combinedIndices[i + 1]]);
+        }
+        return cipherText.toString();
+    }
+    
+    private void findCharIndicies(){
         int index = 0;
-        text = process(text);
-        this.text = text;
-        StringBuilder cipher = new StringBuilder();
-        layerNumbers = new int[text.length()];
-        colNumbers = new int[text.length()];
-        rowNumbers = new int[text.length()];
-        for (int i = 0; i < text.length(); i++) {
-            boolean found = false;
-            char currentChar = text.charAt(i);
-            for (int l = 0; l < 3; l++) {
+        boolean found;
+        for (int i = 0; i < message.length(); i++) {
+            found = false;
+            char currentChar = message.charAt(i);
+            for (int layer = 0; layer < 3; layer++) {
                 if (!found) {
-                    for (int r = 0; r < 3; r++) {
+                    for (int row = 0; row < 3; row++) {
                         if (!found) {
-                            for (int c = 0; c < 3; c++) {
-                                if (layers[l][r][c] == currentChar) {
-                                    layerNumbers[index] = l;
-                                    rowNumbers[index] = r;
-                                    colNumbers[index] = c;
+                            for (int col = 0; col < 3; col++) {
+                                if (cube[layer][row][col] == currentChar) {
+                                    layerIndices[index] = layer;
+                                    columnIndices[index] = col;
+                                    rowIndices[index] = row;
                                     found = true;
                                     break;
                                 }
@@ -57,95 +71,83 @@ public class Trifid {
                         }
                     }
                 }
-            }
+            }    
             index++;
         }
-        displayArrays();
-
-        int[] numbers = mergeArraysNumbers();
-        for(int i = 0; i < numbers.length-2; i+=3) {
-            cipher.append(layers[numbers[i]][numbers[i+2]] [numbers[i+1]]);
-        }
-        return cipher.toString();
-
+        
     }
-    public int[] mergeArraysNumbers() {
-        int[] numbers = new int[text.length()*3];
+
+    private int[] mergeIndices() {
+        int[] combinedIndices = new int[message.length() * 3];
         int index = 0;
         int flag = 0;
-        System.out.println();
-        for(int i = 0; i < text.length()*3; i++) {
-            if(index == text.length()) {
+        for (int i = 0; i < message.length() * 3; i++) {
+            if (index == message.length()) {
                 flag++;
                 index = 0;
             }
-            if(flag == 0) {
-                numbers[i] = layerNumbers[index++];
+            if (flag == 0) {
+                combinedIndices[i] = layerIndices[index++];
+            } else if (flag == 1) {
+                combinedIndices[i] = columnIndices[index++];
+            } else if (flag == 2) {
+                combinedIndices[i] = rowIndices[index++];
             }
-            else if(flag == 1) {
-                numbers[i] = colNumbers[index++];
-            }
-            else if(flag == 2) {
-                numbers[i] = rowNumbers[index++];
-            }
-
         }
-        return numbers;
+        return combinedIndices;
     }
 
-    public String decrypt(String cipher){
-        cipher = cipher.toUpperCase();
-        int[] numbers = new int[cipher.length()*3];
+    public String decrypt(String cipherText) {
+        cipherText = cipherText.toUpperCase();
+        int[] indices = new int[cipherText.length() * 3];
         int index = 0;
-        for(char currentChar : cipher.toCharArray()) {
-            for (int l = 0; l < 3; l++) {
-                for (int r = 0; r < 3; r++) {
-                    for (int c = 0; c < 3; c++) {
-                        if(layers[l][r][c] == currentChar) {
-                            numbers[index++] = l;
-                            numbers[index++] = c;
-                            numbers[index++] = r;
+        for (char currentChar : cipherText.toCharArray()) {
+            for (int layer = 0; layer < 3; layer++) {
+                for (int row = 0; row < 3; row++) {
+                    for (int col = 0; col < 3; col++) {
+                        if (cube[layer][row][col] == currentChar) {
+                            indices[index++] = layer;
+                            indices[index++] = col;
+                            indices[index++] = row;
                         }
                     }
                 }
             }
-
         }
 
-
         int layerIndex = 0;
-        int colIndex = (numbers.length / 3);
-        int rowIndex = (numbers.length - colIndex);
+        int colIndex = indices.length / 3;
+        int rowIndex = indices.length - colIndex;
         StringBuilder decryptedText = new StringBuilder();
         int i = 0;
-        while(i < numbers.length/3) {
-           decryptedText.append(layers[numbers[layerIndex++]][numbers[rowIndex++]][numbers[colIndex++]]);
-           i++;
+        while (i < indices.length / 3) {
+            decryptedText.append(cube[indices[layerIndex++]][indices[rowIndex++]][indices[colIndex++]]);
+            i++;
         }
         return decryptedText.toString();
     }
 
-    public void displayArrays(){
-        System.out.println("\ncharacters");
-        for(int i = 0; i < text.length(); i++) {
-            System.out.print(text.charAt(i)+"  |  ");
-        }
-        System.out.println("\nlayers");
-        for(int i = 0; i < text.length(); i++) {
-            System.out.print(layerNumbers[i]+"  |  ");
-        }
-        System.out.println("\ncols");
-        for(int i = 0; i < text.length(); i++) {
-            System.out.print(colNumbers[i]+"  |  ");
-        }
-        System.out.println("\nrows");
-        for(int i = 0; i < text.length(); i++) {
-            System.out.print(rowNumbers[i]+"  |  ");
-        }
-
+    private String processMessage(String text) {
+        return text.replaceAll(" ", "").toUpperCase();
     }
-    public String process(String text) {
-        text = text.toUpperCase();
-        return text.replaceAll(" ", "");
+
+    private void displayArrays() {
+        System.out.println("\nCharacters");
+        for (int i = 0; i < message.length(); i++) {
+            System.out.print(message.charAt(i) + "  |  ");
+        }
+        System.out.println("\nLayers");
+        for (int i = 0; i < message.length(); i++) {
+            System.out.print(layerIndices[i] + "  |  ");
+        }
+        System.out.println("\nCols");
+        for (int i = 0; i < message.length(); i++) {
+            System.out.print(columnIndices[i] + "  |  ");
+        }
+        System.out.println("\nRows");
+        for (int i = 0; i < message.length(); i++) {
+            System.out.print(rowIndices[i] + "  |  ");
+        }
+        System.out.println();
     }
 }

@@ -8,14 +8,6 @@ public class Main {
     public static void main(String[] args) {
         menu();
         scanner.close();
-
-        Trifid trifidTest = new Trifid();
-        String plainText = "secret message";
-        String encrypted = trifidTest.encrypt(plainText);
-        System.out.println("plain text: " +plainText);
-        System.out.println("encrypted message: "+encrypted);
-        String decrypted = trifidTest.decrypt(encrypted);
-        System.out.println("decrypted text: "+ decrypted);
     }
 
     public static void menu() {
@@ -23,7 +15,6 @@ public class Main {
         do {
             displayMenu();
             choice = getUserChoice();
-
             switch (choice) {
                 case MenuOptions.CAESAR_CIPHER:
                     handleCaesarCipher();
@@ -39,12 +30,13 @@ public class Main {
                     break;
                 case MenuOptions.PLAYFAIR_CIPHER:
                     handelPlayfair();
+                    break;
                 case MenuOptions.TRIFID_CIPHER:
                     HandelTrifid();
-                case MenuOptions.EXIT:
-                    System.out.println("Exiting...");
                     break;
-
+                case MenuOptions.EXIT:
+                    System.out.println("Finished.");
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
@@ -185,7 +177,6 @@ public class Main {
         public static final int POLYBIUS_CIPHER = 4;
         public static final int PLAYFAIR_CIPHER = 5;
         public static final int TRIFID_CIPHER = 6;
-
         public static final int EXIT = 0;
     }
 
