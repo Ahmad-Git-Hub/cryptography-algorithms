@@ -9,7 +9,7 @@ public class Trifid {
     public Trifid() {
         final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.";
         int charIndex = 0;
-        cube = new char[3][3][3]; // Consistent variable naming
+        cube = new char[3][3][3];
         for (int layer = 0; layer < 3; layer++) {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
