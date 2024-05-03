@@ -74,7 +74,6 @@ public class Trifid {
             }    
             index++;
         }
-        
     }
 
     private int[] mergeIndices() {

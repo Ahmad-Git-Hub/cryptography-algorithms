@@ -6,8 +6,11 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        menu();
-        scanner.close();
+//        menu();
+//        scanner.close();
+        Bifid b = new Bifid("hecoding");
+        System.out.println(b.enc());
+        System.out.println(b.dec("FCBMPOTM"));
     }
 
     public static void menu() {
