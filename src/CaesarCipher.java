@@ -1,33 +1,29 @@
 public class CaesarCipher {
     final private int shift;
+    String alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public CaesarCipher(int shift) {
         this.shift = shift;
     }
-    public String encrypt(String str) {
-        StringBuilder result = new StringBuilder();
-        char base;
-        for (char c : str.toCharArray()) {
-            if (Character.isAlphabetic(c)) {
-                base = Character.isUpperCase(c) ? 'A' : 'a';
-                result.append((char) (((c - base + shift) % 26) + base));
-            } else {
-                result.append(c);
-            }
-        }
 
+    public String encrypt(String input) {
+        input = input.toUpperCase();
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char currentChar = input.charAt(i);
+            int pos = alphabets.indexOf(currentChar);
+            result.append(alphabets.charAt((pos + shift) % 26));
+        }
         return result.toString();
     }
-    public String decrypt(String str) {
+
+    public String decrypt(String input) {
+        input = input.toUpperCase();
         StringBuilder result = new StringBuilder();
-        for (char c : str.toCharArray()) {
-            if (Character.isAlphabetic(c)) {
-                char base = Character.isUpperCase(c) ? 'A' : 'a';
-                int decryptedChar = ((c - base - shift + 26) % 26) + base;
-                result.append((char) decryptedChar);
-            } else {
-                result.append(c);
-            }
+        for (int i = 0; i < input.length(); i++) {
+            char currentChar = input.charAt(i);
+            int pos = alphabets.indexOf(currentChar);
+            result.append(alphabets.charAt((pos - shift + 26) % 26));
         }
         return result.toString();
     }
